@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>game</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas{
+            box-shadow: black 20px 10px 50px;
+        }
+        button{
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>game</h1>
+    </div>
+    <canvas id="game" width="400" height="400"></canvas>
+    <br>
+    <br>
+    <button onclick=up() >up</button>
+    <div>
+        <button onclick=left() >left</button><button onclick=right() >right</button>
+    </div>
+    <button onclick=down() >down</button>
+    <script>
+        const game = document.getElementById("game");
+            const ctx = game.getContext("2d");
+            // varibles :
+            let x = 10;
+            let y = 10;
+            let v = { x: 0, y: 0 };
+            let random = {
+                x: Math.floor(Math.random() * 20),
+                y: Math.floor(Math.random() * 20),
+            };
+            let score = 0;
+            let time = 60;
+            let fps = 10;
+
+            // main :
+            function main() {
+                time -= 0.1;
+                if (time < 30) {
+                    fps = 20;
+                }
+                drowCanvas();
+                snake();
+                changePos();
+                addscore();
+                addPoint();
+                drowText();
+                gameOver();
+                setTimeout(main, 1000 / fps);
+            }
+
+            //functions :
+
+            function drowCanvas() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, 400, 400);
+            }
+
+            function snake() {
+                ctx.fillStyle = "red";
+                ctx.fillRect(20 * x, 20 * y, 18, 18);
+            }
+
+            document.body.addEventListener("keydown", key);
+
+            function key(e) {
+                // w = 38
+                // s = 40
+                // a = 37
+                // d = 39
+                if (e.keyCode == 38) {
+                    v.y = -1;
+                    v.x = 0;
+                }
+                if (e.keyCode == 40) {
+                    v.y = 1;
+                    v.x = 0;
+                }
+                if (e.keyCode == 37) {
+                    v.y = 0;
+                    v.x = -1;
+                }
+                if (e.keyCode == 39) {
+                    v.y = 0;
+                    v.x = 1;
+                }
+            }
+            function changePos() {
+                x += v.x;
+                y += v.y;
+            }
+            function addPoint() {
+                ctx.fillStyle = "gray";
+                ctx.fillRect(random.x * 20, random.y * 20, 18, 18);
+            }
+            function addscore() {
+                if (x == random.x && y == random.y) {
+                    random.x = Math.floor(Math.random() * 20);
+                    random.y = Math.floor(Math.random() * 20);
+                    score++;
+                }
+            }
+            function drowText() {
+                ctx.fillStyle = "white";
+                ctx.fillText(`score :${score}`, 350, 15);
+                ctx.fillStyle = "white";
+                ctx.fillText(`time :${Math.floor(time)}`, 5, 15);
+            }
+            function gameOver() {
+                if (x == -1 || x == 20 || y == -1 || y == 20 || time <= 0) {
+                    ctx.fillRect = "red";
+                    ctx.fillText(`GAME Over your score is : ${score}`, 100, 200);
+                }
+            }
+            function up(){
+                v.y = -1;
+                v.x = 0;
+            }
+            function down() {
+                v.y = 1;
+                v.x = 0;
+            }
+            function left() {
+                v.y = 0;
+                v.x = -1;
+            }
+            function right() {
+                v.y = 0;
+                v.x = 1;
+            }
+            main();
+    </script>
+</body>
+</html>
